@@ -1,4 +1,7 @@
 # quechoisir-comparator-scrapers
+
+[![Pre-commit Checks](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml/badge.svg)](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml)
+
 Implementing ETL pipelines to daily scrap the free comparators of the website www.quechoisir.org.
 
 The data is stored to a cloud storage service (e.g. Google cloud BigQuery) and the logs are streamed to a cloud logging service (e.g. Google cloud Logging).
