@@ -8,6 +8,7 @@
 - CONTRIBUTING.md
 - VERSION
 - .gitignore
+- .actrc
 - .pre-commit-config.yaml
 - .bumpversion.toml
 - .github/workflows/ci.yml

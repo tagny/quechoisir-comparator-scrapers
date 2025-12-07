@@ -33,6 +33,9 @@ quechoisir-comparator-scrapers/
 ├── src/                                                  # Source code directory
 ├── tests/                                                # Tests directory
 ├── .gitignore                                            # Git ignore file
+├── .actrc                                                # Act configuration file
+├── .pre-commit-config.yaml                               # Pre-commit configuration file
+├── .bumpversion.toml                                     # Bumpversion configuration file
 ├── README.md                                             # README file
 ├── LICENSE                                               # License file
 ├── CHANGELOG.md                                          # Changelog file

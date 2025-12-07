@@ -114,6 +114,8 @@ See the [PR template](.github/pull_request_template.md)
 
 ### Testing GitHub Actions Locally
 
+TODO: this still need to be fixed
+
 You can use the `act` tool to run GitHub Actions workflows locally. Follow these steps to set it up and use it:
 
 1. **Install `act`:**
@@ -121,8 +123,7 @@ You can use the `act` tool to run GitHub Actions workflows locally. Follow these
 See https://nektosact.com/installation/index.html for installation instructions.
 
    ```bash
-   brew install act  # On macOS using Homebrew
-   sudo apt-get install act  # On Ubuntu/Debian
+   curl https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash # On Ubuntu/Debian
    ```
 
 2. **Configure `act`:**
@@ -139,7 +140,7 @@ See https://nektosact.com/installation/index.html for installation instructions.
 
    ```bash
    act  # Run all workflows
-   act .github/workflows/ci.yml  # Run a specific workflow
+   act -W .github/workflows/ci.yml  # Run a specific workflow
    ```
 
 This will allow you to test your GitHub Actions locally before pushing changes.

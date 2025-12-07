@@ -1,1 +1,52 @@
 # Continuous Integration workflow.
+name: Pre-commit Checks
+
+on:
+  # Trigger the workflow on pull request events
+  pull_request:
+    # Only run the workflow when the pull request is opened, synchronized (new commits pushed), or reopened
+    types: [opened, synchronize, reopened]
+    # Specify the target branch(es) for which the checks should run
+    branches:
+      - main
+
+# Ensure that there are no concurrently running jobs for the same pull request
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout Repository
+        # Checks out your code so the workflow can access it
+        uses: actions/checkout@v6.0.1
+        with:
+          # repository: ${{ github.repository }}
+          # ref: ${{ github.ref }}
+          # token: ${{ secrets.GITHUB_TOKEN }}
+          path: .
+
+      # - name: 🛠️ Set up Python
+      #   # pre-commit is a Python tool, so Python needs to be available
+      #   uses: actions/setup-python@v5.6.0
+      #   with:
+      #     python-version: '3.14.1' # Use a standard Python version
+      #     architecture: 'x64'
+      #     platform: 'linux'
+      #     platform-version: '24.04'
+
+      # - name: Sleep for 600 seconds
+      #   uses: jakejarvis/wait-action@master
+      #   with:
+      #     time: '600s'
+
+      - name: 🏃 Run pre-commit checks
+        # Uses the official action to install pre-commit and run the configured hooks
+        uses: pre-commit/action@v3.0.1
+        # This is the dedicated action that installs pre-commit,
+        # finds your .pre-commit-config.yaml,
+        # and runs all the defined hooks against the changes in the pull request.
+        # By default, this action runs against the changes in the current commit.
+        # It should succeed if all hooks pass. If a hook fails, the job will fail.
