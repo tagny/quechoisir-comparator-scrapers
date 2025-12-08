@@ -17,3 +17,8 @@
 - .github/ISSUE_TEMPLATES/feature_request.md
 - .github/ISSUE_TEMPLATES/custom.md
 - .github/pull_request_template.md
+
+## 0.2.0
+
+- Add extract step of mobile phone plans ETL pipeline with Dockerfile.
+- Add Airflow-orchestrated ETL pipeline for mobile phone plans, including execution scripts and environment setup.
