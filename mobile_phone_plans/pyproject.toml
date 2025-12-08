@@ -1,0 +1,48 @@
+[project]
+name = "mobile-phone-plans-etl"
+dynamic = ["version"]
+description = "Mobile phone plans ETL"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "click>=8.3.1",
+    "google-cloud-logging>=3.12.1",
+    "google-cloud-storage>=3.6.0",
+    "python-dotenv>=1.2.1",
+    "pytz>=2025.2",
+    "pyyaml>=6.0.3",
+    "selenium>=4.39.0",
+]
+
+authors = [
+    { name = "Tagny Ngompé", email = "tagny@ymail.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: The Unlicense (Unlicensed)",
+    "Operating System :: OS Independent",
+]
+
+[build-system]
+requires = ["setuptools>=61.0.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["etl"]
+
+[tool.setuptools.dynamic]
+version = {attr = "etl.__version__"}
+
+[tool.uv.workspace]
+members = [
+    "airflow_dags",
+]
+
+[project.scripts]
+mobile-phone-plans-etl = "etl.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/tagny/quechoisir-comparator-scrapers/mobile_phone_plans"
+Repository = "https://github.com/tagny/quechoisir-comparator-scrapers"
+"Bug Tracker" = "https://github.com/tagny/quechoisir-comparator-scrapers/issues"

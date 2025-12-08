@@ -1,0 +1,64 @@
+"""This DAG is used to run the ETL (Extract, Transform, Load)
+pipeline for mobile phone plans"""
+
+from datetime import datetime
+
+import pendulum
+from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.providers.standard.operators.bash import BashOperator
+from airflow.sdk import DAG
+from docker.types import Mount
+
+ENV_FILE = "mobile_phone_plans_etl_dag.env"
+
+HOST_SA_KEY_PATH = "/tmp/service_account_key.json"
+CONTAINER_SA_KEY_PATH = "/tmp/service_account_key.json"
+
+sa_key_mount = Mount(
+    source=HOST_SA_KEY_PATH,
+    target=CONTAINER_SA_KEY_PATH,
+    type="bind",  # Use 'bind' for mounting host directories/files
+    read_only=True,  # Recommended for config files/secrets
+)
+
+# DAG configuration
+with DAG(
+    dag_id="quechoisir_mobile_phone_plans_etl",
+    start_date=pendulum.datetime(2023, 1, 1, tz="UTC"),
+    schedule=None,
+    catchup=False,
+    tags=["tagny", "quechoisir", "mobile_phone_plans"],
+) as dag:
+    today_date = datetime.now().strftime("%Y/%m/%d")
+    # Define the start task
+    start_task = BashOperator(
+        task_id="0_start_pipeline",
+        bash_command='echo "Starting ETL... wd=$(pwd)"'
+        f" && ls {HOST_SA_KEY_PATH}"
+        f' && [ -f "{HOST_SA_KEY_PATH}" ] && echo "Service account key found'
+        f' at {HOST_SA_KEY_PATH}" && exit 0 || echo "Service account key not'
+        f' found at {HOST_SA_KEY_PATH}" && exit 1',
+    )
+
+    end_task = BashOperator(task_id="4_end_pipeline", bash_command="echo 'Ending ETL!'")
+
+    extract_task_id = "1_extract"
+
+    etl_extract_task = DockerOperator(
+        task_id=extract_task_id,
+        dag=dag,
+        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        container_name=f"airflow-task-{extract_task_id}",
+        auto_remove="never",
+        env_file=ENV_FILE,
+        # --- Mounts Configuration ---
+        mounts=[sa_key_mount],
+        command=[
+            "sh",
+            "-c",
+            "uv run -m etl extract -c config/extract_action_sequence.yml"
+            f" -k {CONTAINER_SA_KEY_PATH}",
+        ],
+    )
+
+    (start_task >> etl_extract_task >> end_task)

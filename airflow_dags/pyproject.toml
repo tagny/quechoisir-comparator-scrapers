@@ -1,0 +1,10 @@
+[project]
+name = "quechoisir-mobile-phone-plans-airflow-dags"
+version = "0.1.0"
+description = "Airflow dags for quechoisir-mobile-phone-plans-etl"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "apache-airflow[google,docker]",
+    "graphviz>=0.21",
+]

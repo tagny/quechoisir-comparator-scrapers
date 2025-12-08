@@ -144,6 +144,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.python-version
 
 # Spyder project settings
 .spyderproject
@@ -209,7 +210,8 @@ __marimo__/
 
 # Running resources
 /data
-/.data
+.data
 .log
 /logs
-/.logs
+.logs
+uv.lock
