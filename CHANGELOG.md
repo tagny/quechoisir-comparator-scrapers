@@ -22,3 +22,4 @@
 
 - Add extract step of mobile phone plans ETL pipeline with Dockerfile.
 - Add Airflow-orchestrated ETL pipeline for mobile phone plans, including execution scripts and environment setup.
+- Add start script to run the ETL pipeline in a tmux session.

@@ -1,7 +1,7 @@
 # !/bin/bash
 # Script to run Airflow DAGs for the project
 # Usage: bash -x ./scripts/start_airflow.sh <AIRFLOW_DAGS_DIR> <SERVICE_ACCOUNT_KEY_PATH>
-# Example: bash -x ./scripts/start_airflow.sh /home/tagny/github/quechoisir-comparator-scrapers/airflow_dags/dags .data/credentials/service_account_key.json
+# Example: bash ./scripts/start_airflow.sh /home/tagny/github/quechoisir-comparator-scrapers/airflow_dags/dags .data/credentials/service_account_key.json
 docker system prune -f
 
 source airflow_dags/.venv/bin/activate
