@@ -35,21 +35,24 @@ uv sync
 ## Usage
 
 ```bash
-uv run -m etl <etl_step> -c <config_file> -s <service_account_key_json_path>
+uv run -m etl extract -c <config_file> -k <service_account_key_json_path>
+uv run -m etl transform -s <scraping_date> -k <service_account_key_json_path>
 ```
 
 where:
-  - <etl_step> is the ETL step to run (e.g. "extract", "transform", "load")
   - <config_file> is the path to the config file (e.g. "config/extract_action_sequence.yml")
   - <service_account_key_json_path> is the path to the service account key JSON file (e.g. "./.data/credentials/service_account_key.json")
 
 Example:
 ```bash
-# Run the ETL pipeline without cloud logging
+# Run the extract step of the ETL pipeline without cloud logging
 uv run -m etl extract -c config/extract_action_sequence.yml
 
-# Run the ETL pipeline with cloud logging
+# Run the extract step of the ETL pipeline with cloud logging
 uv run -m etl extract -c config/extract_action_sequence.yml -k .data/credentials/service_account_key.json
+
+# Run the transform step of the ETL pipeline without cloud logging
+uv run -m etl transform -d 2025/12/07 -k ../.data/credentials/service_account_key.json
 ```
 
 ## Docker

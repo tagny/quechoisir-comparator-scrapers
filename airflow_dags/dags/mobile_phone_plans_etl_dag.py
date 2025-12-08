@@ -10,6 +10,7 @@ from airflow.sdk import DAG
 from docker.types import Mount
 
 ENV_FILE = "mobile_phone_plans_etl_dag.env"
+CONFIG_FILE = "config/extract_action_sequence.yml"
 
 HOST_SA_KEY_PATH = "/tmp/service_account_key.json"
 CONTAINER_SA_KEY_PATH = "/tmp/service_account_key.json"
@@ -43,8 +44,9 @@ with DAG(
     end_task = BashOperator(task_id="4_end_pipeline", bash_command="echo 'Ending ETL!'")
 
     extract_task_id = "1_extract"
+    transform_task_id = "2_transform"
 
-    etl_extract_task = DockerOperator(
+    extract_task = DockerOperator(
         task_id=extract_task_id,
         dag=dag,
         image="tagny/quechoisir-mobile-phone-plans-etl:latest",
@@ -56,9 +58,24 @@ with DAG(
         command=[
             "sh",
             "-c",
-            "uv run -m etl extract -c config/extract_action_sequence.yml"
-            f" -k {CONTAINER_SA_KEY_PATH}",
+            f"uv run -m etl extract -c {CONFIG_FILE} -k {CONTAINER_SA_KEY_PATH}",
         ],
     )
 
-    (start_task >> etl_extract_task >> end_task)
+    transform_task = DockerOperator(
+        task_id=transform_task_id,
+        dag=dag,
+        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        container_name=f"airflow-task-{transform_task_id}",
+        auto_remove="never",
+        env_file=ENV_FILE,
+        # --- Mounts Configuration ---
+        mounts=[sa_key_mount],
+        command=[
+            "sh",
+            "-c",
+            f"uv run -m etl transform -d {today_date} -k {CONTAINER_SA_KEY_PATH}",
+        ],
+    )
+
+    (start_task >> extract_task >> transform_task >> end_task)

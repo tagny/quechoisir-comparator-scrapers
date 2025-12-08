@@ -102,5 +102,6 @@ def setup_logger(
             )
 
 
+setup_logger()
 TODAY_DATE = datetime.now(pytz.timezone("Europe/Paris")).strftime("%d-%m-%Y %H:%M:%S")
 logger.info("Logger set up successfully on %s!", TODAY_DATE)

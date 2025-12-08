@@ -11,13 +11,19 @@ from etl.data.raw_data_loading import (
     GoogleCloudStorageHtmlLoader,
     LocalHtmlLoader,
 )
+from etl.data.transformed_data_loading import (
+    GoogleCloudStorageJsonLoader,
+    LocalJsonLoader,
+)
 from etl.extract.downloading import Action, DynamicSearchBrowser
 from etl.logging_setup import logger, setup_logger
+from etl.transform.daily_plans_transformation import DailyPlansTransformer
 
 load_dotenv()
 
 BUCKET_NAME = os.getenv("BUCKET_NAME")
 RAW_BASE_DIR = os.getenv("RAW_BASE_DIR")
+TRANSFORMED_BASE_DIR = os.getenv("TRANSFORMED_BASE_DIR")
 BASE_URL = os.getenv("BASE_URL")
 PROJECT_ID = os.getenv("PROJECT_ID")
 ETL_STEP_EXTRACT = "1-EXTRACT"
@@ -41,6 +47,31 @@ def get_suitable_raw_data_loader(
         )
     return LocalHtmlLoader(
         raw_base_dir=raw_base_dir,
+        scraping_date=scraping_date,
+    )
+
+
+def get_suitable_transformed_data_loader(
+    bucket: str,
+    transformed_base_dir: str,
+    service_account_json_path: str,
+    scraping_date: datetime,
+) -> LocalJsonLoader | GoogleCloudStorageJsonLoader:
+    """Initializes a suitable JSON loader based on the"""
+    logger.info(
+        "Initializing JSON loader with bucket=%s, service_account_json_path=%s",
+        bucket,
+        service_account_json_path,
+    )
+    if bucket and service_account_json_path:
+        return GoogleCloudStorageJsonLoader(
+            bucket_name=bucket,
+            transformed_base_dir=transformed_base_dir,
+            service_account_key_json_path=service_account_json_path,
+            scraping_date=scraping_date,
+        )
+    return LocalJsonLoader(
+        transformed_base_dir=transformed_base_dir,
         scraping_date=scraping_date,
     )
 
@@ -103,6 +134,64 @@ def extract(
     )
     browser.run()
     logger.info("End of ETL pipeline step - extract")
+
+
+@app.command()
+@click.option(
+    "-d",
+    "--scraping-date",
+    help="The date in YYYY/MM/DD format when the raw HTML files where scraped"
+    " to identify their folder.",
+)
+@click.option(
+    "-k",
+    "--service-account-key-path",
+    help="Path to the service account key JSON file",
+)
+def transform(
+    scraping_date: str,
+    service_account_key_path: str,
+):
+    """Transform step of the ETL pipeline scraping mobile phone plans
+
+    Args:
+        scraping_date (str): The date in YYYY/MM/DD format when the raw HTML
+         files where scraped to identify their folder.
+        service_account_key_path (str): Path to the service account key JSON file
+    """
+    setup_logger(
+        level=logging.INFO,
+        etl_step=ETL_STEP_TRANSFORM,
+        service_account_key_json_path=service_account_key_path,
+    )
+    logger.info(
+        "ETL pipeline - step transform - on scraping_date = %s",
+        scraping_date,
+    )
+
+    scraping_date = datetime.strptime(scraping_date, "%Y/%m/%d")
+
+    raw_data_loader = get_suitable_raw_data_loader(
+        BUCKET_NAME,
+        RAW_BASE_DIR,
+        service_account_key_path,
+        scraping_date,
+    )
+
+    transformed_data_loader = get_suitable_transformed_data_loader(
+        BUCKET_NAME,
+        TRANSFORMED_BASE_DIR,
+        service_account_key_path,
+        scraping_date,
+    )
+
+    transformer = DailyPlansTransformer(
+        scraping_date=scraping_date,
+        raw_data_loader=raw_data_loader,
+        transformed_data_loader=transformed_data_loader,
+    )
+    transformer.transform()
+    logger.info("End of ETL pipeline step - transform")
 
 
 if __name__ == "__main__":
