@@ -12,10 +12,11 @@ from etl.data.utils import serialize_to_json_file
 
 @dataclass
 class MobilePhonePlan:
+    scraping_date: str
     name: str
     description: str
     operator_name: str
-    price: float
+    price: str
     internet_level: str
     call_included: str
     sms_included: str
@@ -41,6 +42,7 @@ class MobilePhonePlan:
         )
         internet_data_from_description = description.split("Volume données")[-1].strip()
         return cls(
+            scraping_date=None,
             name=plan_element.find(
                 "article", class_="qc-offer-card qc-shadow-2 qc-round-2 qc-grid"
             )

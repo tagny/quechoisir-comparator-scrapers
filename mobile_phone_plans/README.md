@@ -52,7 +52,10 @@ uv run -m etl extract -c config/extract_action_sequence.yml
 uv run -m etl extract -c config/extract_action_sequence.yml -k .data/credentials/service_account_key.json
 
 # Run the transform step of the ETL pipeline without cloud logging
-uv run -m etl transform -d 2025/12/07 -k ../.data/credentials/service_account_key.json
+uv run -m etl transform -d 2025/12/08 -k ../.data/credentials/service_account_key.json
+
+# Run the load step of the ETL pipeline without cloud logging
+uv run -m etl load -d 2025/12/08 -k ../.data/credentials/service_account_key.json
 ```
 
 ## Docker
@@ -68,7 +71,7 @@ docker build \
 docker tag tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION tagny/quechoisir-mobile-phone-plans-etl:latest
 
 # Run the Docker container and open a shell
-docker run -ti tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION sh
+# docker run -ti tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION sh
 docker run -ti --env-file .env --mount type=bind,src=/tmp/service_account_key.json,dst=/tmp/service_account_key.json,readonly tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION sh
 
 # Run the ETL pipeline without cloud logging

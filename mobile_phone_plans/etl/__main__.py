@@ -16,6 +16,7 @@ from etl.data.transformed_data_loading import (
     LocalJsonLoader,
 )
 from etl.extract.downloading import Action, DynamicSearchBrowser
+from etl.load.loading_to_bigquery import BigQueryDataLoader
 from etl.logging_setup import logger, setup_logger
 from etl.transform.daily_plans_transformation import DailyPlansTransformer
 
@@ -24,6 +25,7 @@ load_dotenv()
 BUCKET_NAME = os.getenv("BUCKET_NAME")
 RAW_BASE_DIR = os.getenv("RAW_BASE_DIR")
 TRANSFORMED_BASE_DIR = os.getenv("TRANSFORMED_BASE_DIR")
+DATASET = os.getenv("DATASET")
 BASE_URL = os.getenv("BASE_URL")
 PROJECT_ID = os.getenv("PROJECT_ID")
 ETL_STEP_EXTRACT = "1-EXTRACT"
@@ -194,11 +196,64 @@ def transform(
     logger.info("End of ETL pipeline step - transform")
 
 
+@app.command()
+@click.option(
+    "-d",
+    "--scraping-date",
+    help="The date when the raw HTML files where scraped to identify their folder.",
+)
+@click.option(
+    "-k",
+    "--service-account-key-path",
+    help="Path to the service account key JSON file",
+)
+def load(
+    scraping_date: str,
+    service_account_key_path: str,
+):
+    """Load step of the ETL pipeline scraping mobile phone plans
+
+    Args:
+        predefined_profile_id (str): the id of the predefined prospect profile
+         to use (defined in fr_energy_offers_scraper.data.prospect_predefined_profiles).
+        scraping_date (str): The date when the raw HTML files where scraped
+         to identify their folder.
+        service_account_key_path (str): Path to the service account key JSON file
+    """
+    setup_logger(
+        level=logging.INFO,
+        etl_step=ETL_STEP_LOAD,
+        service_account_key_json_path=service_account_key_path,
+    )
+    logger.info(
+        "ETL pipeline - step load - on scraping_date = %s",
+        scraping_date,
+    )
+
+    scraping_date = datetime.strptime(scraping_date, "%Y/%m/%d")
+    transformed_data_loader = get_suitable_transformed_data_loader(
+        BUCKET_NAME,
+        TRANSFORMED_BASE_DIR,
+        service_account_key_path,
+        scraping_date,
+    )
+
+    bq_loader = BigQueryDataLoader(
+        transformed_data_loader=transformed_data_loader,
+        project_id=PROJECT_ID,
+        dataset=DATASET,
+        service_account_key_json_path=service_account_key_path,
+    )
+
+    bq_loader.insert_plans()
+    logger.info("End of ETL pipeline step - load")
+
+
 if __name__ == "__main__":
     try:
         app()
     except Exception as ex:
-        logger.exception("Error while running the ETL pipeline step!")
+        logger.exception("Error while running the ETL pipeline step: %s", ex)
         raise ex
     finally:
         # Close the client to close all associated handlers and flush logs

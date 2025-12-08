@@ -45,6 +45,7 @@ with DAG(
 
     extract_task_id = "1_extract"
     transform_task_id = "2_transform"
+    load_task_id = "3_load"
 
     extract_task = DockerOperator(
         task_id=extract_task_id,
@@ -78,4 +79,20 @@ with DAG(
         ],
     )
 
-    (start_task >> extract_task >> transform_task >> end_task)
+    load_task = DockerOperator(
+        task_id=load_task_id,
+        dag=dag,
+        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        container_name=f"airflow-task-{load_task_id}",
+        auto_remove="never",
+        env_file=ENV_FILE,
+        # --- Mounts Configuration ---
+        mounts=[sa_key_mount],
+        command=[
+            "sh",
+            "-c",
+            f"uv run -m etl load -d {today_date} -k {CONTAINER_SA_KEY_PATH}",
+        ],
+    )
+
+    start_task >> extract_task >> transform_task >> load_task >> end_task

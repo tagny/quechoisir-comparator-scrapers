@@ -159,8 +159,8 @@ class GoogleCloudStorageHtmlLoader(BaseHtmlLoader):
         try:
             logger.info("loading data from gs://%s/%s", self.bucket_name, blob_path)
             return blob.download_as_text(encoding="utf-8")
-        except NotFound as exc:
+        except NotFound as ex:
             logger.exception(
-                "GCS object gs://%s/%s not found", self.bucket_name, blob_path
+                "GCS object gs://%s/%s not found: %s", self.bucket_name, blob_path, ex
             )
-            raise exc
+            raise ex
