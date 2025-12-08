@@ -31,10 +31,12 @@ The Airflow ETL pipeline will be run daily by the start script that will:
 
 ```shell
 quechoisir-comparator-scrapers/
-├── .data/                                                # Data directory
-├── .logs/                                                # Logs directory
-├── src/                                                  # Source code directory
-├── tests/                                                # Tests directory
+├── .data/                                                # Default data directory
+├── .logs/                                                # Default logs directory
+├── airflow_dags/                                         # Airflow dags directory
+├── mobile_phone_plans/                                   # Mobile phone plans scraper source code directory
+├── scripts/                                              # Automation scripts directory
+├── tests/                                                # Tests directory (TODO: to be implemented)
 ├── .gitignore                                            # Git ignore file
 ├── .actrc                                                # Act configuration file
 ├── .pre-commit-config.yaml                               # Pre-commit configuration file
@@ -44,14 +46,14 @@ quechoisir-comparator-scrapers/
 ├── CHANGELOG.md                                          # Changelog file
 ├── CONTRIBUTING.md                                       # Contributing file
 ├── VERSION                                               # Version file
-├── .github/                                              # GitHub directory
+└── .github/                                              # GitHub directory
     ├── ISSUE_TEMPLATE/                                  # Issue templates directory
-        ├── bug_report.md                                 # Bug report issue template
-        ├── feature_request.md                            # Feature request issue template
-        ├── custom.md                                     # Custom issue template
-    ├── workflows/                                        # Workflows directory
+    │   ├── bug_report.md                                 # Bug report issue template
+    │   ├── feature_request.md                            # Feature request issue template
+    │   └── custom.md                                     # Custom issue template
+    └── workflows/                                        # Workflows directory
         ├── ci.yml                                        # CI workflow
-        ├── cd.yml                                        # CD workflow
+        └── cd.yml                                        # CD workflow
 ```
 
 ## Contributing

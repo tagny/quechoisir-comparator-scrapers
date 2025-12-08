@@ -35,10 +35,10 @@ def init_chrome_driver() -> webdriver.Chrome:
         driver = webdriver.Chrome(options=chrome_options)
         logger.info("Chrome Web driver initialized")
         return driver
-    except Exception as e:
-        logger.exception("Error when init web driver")
+    except Exception as ex:
+        logger.exception("Error when init web driver: %s", ex)
         # Clean up the temporary user data dir
         logger.debug("Clean up the temporary user data dir")
         shutil.rmtree(tmp_user_dir, ignore_errors=True)
         # raise the exception
-        raise e
+        raise ex

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Start the airflow server and the etl in a tmux session
 # Usage: bash -x ./scripts/start_script.sh <DAG_ID> <AIRFLOW_DAGS_DIR> <SERVICE_ACCOUNT_KEY_PATH>
-# Example: bash -x ./scripts/start_script.sh quechoisir_mobile_phone_plans_etl ./airflow_dags ./.data/credentials/service_account_key.json
+# Example: bash -x ./scripts/start_script.sh quechoisir_mobile_phone_plans_etl ./airflow_dags/dags ./.data/credentials/service_account_key.json
 
 DAG_ID=$1
 if [ -z "$DAG_ID" ]; then

@@ -27,3 +27,7 @@
 ## 0.3.0
 
 - Add transformation step of mobile phone plans ETL pipeline with new data model and Airflow orchestration.
+
+## 0.4.0
+
+- Add loading step of mobile phone plans ETL pipeline with BigQuery and Airflow orchestration.

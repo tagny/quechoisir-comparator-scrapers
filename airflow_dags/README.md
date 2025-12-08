@@ -2,7 +2,7 @@
 
 This package implements the Airflow dags for quechoisir-mobile-phone-plans-etl.
 
-# project structure
+## Project structure
 
 - `mobile_phone_plans_etl_dag.py`: implements the mobile phone plans ETL dag running a docker container for each ETL step
 - `pyproject.toml`: project configuration file

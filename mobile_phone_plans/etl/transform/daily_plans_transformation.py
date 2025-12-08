@@ -34,10 +34,12 @@ class DailyPlansTransformer:
         for plan_article in plan_articles:
             plan_div_element = plan_article.find_parent("div")
             try:
-                plans.append(MobilePhonePlan.from_plan_element(plan_div_element))
-            except Exception:
+                plan = MobilePhonePlan.from_plan_element(plan_div_element)
+                plan.scraping_date = self.scraping_date
+                plans.append(plan)
+            except Exception as ex:
                 logger.exception(
-                    "Failed to transform plan element: %s", plan_div_element
+                    "Failed to transform plan element %s: %s", plan_div_element, ex
                 )
         self.transformed_data_loader.save_plans(plans)
 

@@ -95,10 +95,11 @@ def setup_logger(
                 cloud_handler.setLevel(logging.INFO)
                 cloud_handler.setFormatter(formatter)
                 logger.addHandler(cloud_handler)
-        except Exception:
+        except Exception as ex:
             logger.exception(
-                "Error when adding cloud logging handler with %s",
+                "Error when adding cloud logging handler with %s: %s",
                 service_account_key_json_path,
+                ex,
             )
 
 

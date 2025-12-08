@@ -90,8 +90,10 @@ class DynamicSearchBrowser:
                 logger.debug(
                     "Range input value after: %s", web_elt.get_attribute("value")
                 )
-            except Exception:
-                logger.exception("JS range set failed, falling back to send_keys")
+            except Exception as ex:
+                logger.exception(
+                    "JS range set failed, falling back to send_keys: %s", ex
+                )
                 logger.debug(
                     "Range input value before: %s", web_elt.get_attribute("value")
                 )
@@ -113,9 +115,8 @@ class DynamicSearchBrowser:
             logger.info("Executes %s", action)
             try:
                 self.execute_action(action)
-            except Exception:
-                logger.exception("Error")
-                # break
+            except Exception as ex:
+                logger.exception("Error when executing action %s: %s", action, ex)
             finally:
                 # Save after each action for debugging
                 html_content = self.driver.page_source
