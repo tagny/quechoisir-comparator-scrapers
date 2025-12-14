@@ -37,6 +37,9 @@ COPY pyproject.toml README.md ./
 # Copy configuration files
 COPY config ./config
 
+# Copy Airflow dags
+COPY dags ./dags
+
 # Install project dependencies (including dev deps)
 RUN uv sync
 

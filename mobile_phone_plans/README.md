@@ -65,6 +65,7 @@ export IMAGE_VERSION=$(python -c "from etl.__version__ import __version__; print
 
 # Build the Docker image
 docker build \
+  --no-cache \
   --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
   -t tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION .
 

@@ -38,11 +38,6 @@ include = ["etl"]
 [tool.setuptools.dynamic]
 version = {attr = "etl.__version__"}
 
-[tool.uv.workspace]
-members = [
-    "airflow_dags",
-]
-
 [project.scripts]
 mobile-phone-plans-etl = "etl.__main__:main"
 
