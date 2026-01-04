@@ -4,9 +4,11 @@ import json
 import os
 from collections.abc import Iterable
 from dataclasses import asdict, is_dataclass
-from datetime import datetime, time, date
+from datetime import date, datetime, time
 from enum import Enum
 from typing import Any
+
+from logging_setup import logger
 
 
 def is_builtin_class_instance(obj):

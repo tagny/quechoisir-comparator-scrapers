@@ -18,7 +18,10 @@ logger.setLevel(logging.DEBUG)
 BASE_MSG_FORMAT = (
     "[%(levelname)s|%(name)s|%(asctime)s|%(filename)s:%(lineno)s] %(message)s"
 )
-ETL_STEP_MSG_FORMAT = "[%(levelname)s|%(name)s|{etl_step}|%(asctime)s|%(filename)s:%(lineno)s] %(message)s"
+ETL_STEP_MSG_FORMAT = (
+    "[%(levelname)s|%(name)s|{etl_step}|%(asctime)s|%(filename)s"
+    ":%(lineno)s] %(message)s"
+)
 DATE_FORMAT = "%H:%M:%S"
 LOG_DIR = "./.logs"
 os.makedirs(LOG_DIR, exist_ok=True)

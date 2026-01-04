@@ -41,7 +41,9 @@ class InternetBoxPlansTransformer:
             data_modal_id = plan_article.find("button").attrs["data-modal-content"]
             data_modal_element = soup.find("div", id=data_modal_id)
             try:
-                plan = InternetBoxPlan.from_plan_element(plan_div_element, data_modal_element)
+                plan = InternetBoxPlan.from_plan_element(
+                    plan_div_element, data_modal_element
+                )
                 plan.scraping_date = self.scraping_date
                 plan.updated_date = updated_date
                 plans.append(plan)

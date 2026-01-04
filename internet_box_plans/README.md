@@ -24,7 +24,7 @@ internet_box_plans/
 │    │   ├── __init__.py                 # etl package extract module initialization script
 │    │   ├── downloading.py              # etl package extract module downloading script
 │    │   └── selenium_setup.py           # etl package extract module selenium setup script
-│    ├── transform                       # etl package transform module 
+│    ├── transform                       # etl package transform module
 │    │   ├── __init__.py                 # etl package transform module initialization script
 │    │   └── transform.py                # etl package transform module transform script
 │    └── load                            # etl package load module
@@ -58,7 +58,7 @@ The environment variables are stored in a `.env` file. An example is provided in
 
 ### Service account key
 
-The service account key is a JSON file that contains the credentials for the Google Cloud service account. It is used to authenticate the ETL pipeline when it is run in a Docker container. 
+The service account key is a JSON file that contains the credentials for the Google Cloud service account. It is used to authenticate the ETL pipeline when it is run in a Docker container.
 
 The service account key is mounted in the Docker container at `/tmp/service_account_key.json`.
 

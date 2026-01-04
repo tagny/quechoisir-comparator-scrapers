@@ -2,9 +2,9 @@
 
 import uuid
 
+from google.cloud import bigquery
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.ext.declarative import declarative_base
-from google.cloud import bigquery
 
 Base = declarative_base()
 
@@ -31,13 +31,12 @@ class InternetBoxPlanDatabaseTable(Base):
     cancellation_cost = Column(String, nullable=True)
     cloud_storage = Column(String, nullable=True)
 
-    __table_args__ = (
-        {
-            "bigquery_time_partitioning": bigquery.TimePartitioning(
-                type_="MONTH",           # Choices: "DAY", "MONTH", "YEAR", "HOUR"
-                field="scraping_date",    # The specific column to use
-                expiration_ms=None,    # Optional: data retention in milliseconds
-            ),
-            "bigquery_require_partition_filter": True, # Optional: forces users to filter by date
-        }
-    )
+    __table_args__ = {
+        "bigquery_time_partitioning": bigquery.TimePartitioning(
+            type_="MONTH",  # Choices: "DAY", "MONTH", "YEAR", "HOUR"
+            field="scraping_date",  # The specific column to use
+            expiration_ms=None,  # Optional: data retention in milliseconds
+        ),
+        # Optional: forces users to filter by date
+        "bigquery_require_partition_filter": True,
+    }
