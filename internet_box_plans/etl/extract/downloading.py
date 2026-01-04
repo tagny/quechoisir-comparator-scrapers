@@ -1,4 +1,4 @@
-"""This module scrap offers from the comparator mobile phone plans by running different
+"""This module scrap offers from the internet box comparator by running different
 scenarios i.e. prospect profiles"""
 
 import time

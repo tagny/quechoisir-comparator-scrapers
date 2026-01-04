@@ -1,5 +1,5 @@
 """This DAG is used to run the ETL (Extract, Transform, Load)
-pipeline for mobile phone plans"""
+pipeline for internet box plans"""
 
 from datetime import datetime
 
@@ -9,7 +9,7 @@ from airflow.providers.standard.operators.bash import BashOperator
 from airflow.sdk import DAG
 from docker.types import Mount
 
-ENV_FILE = "mobile_phone_plans_etl_dag.env"
+ENV_FILE = "internet_box_plans_etl_dag.env"
 CONFIG_FILE = "config/extract_action_sequence.yml"
 
 HOST_SA_KEY_PATH = "/tmp/service_account_key.json"
@@ -22,7 +22,7 @@ sa_key_mount = Mount(
     read_only=True,  # Recommended for config files/secrets
 )
 
-DAG_NAME = "quechoisir_mobile_phone_plans_etl"
+DAG_NAME = "quechoisir_internet_box_plans_etl"
 
 # DAG configuration
 with DAG(
@@ -30,7 +30,7 @@ with DAG(
     start_date=pendulum.datetime(2023, 1, 1, tz="UTC"),
     schedule=None,
     catchup=False,
-    tags=["tagny", "quechoisir", "mobile_phone_plans"],
+    tags=["tagny", "quechoisir", "internet_box_plans"],
 ) as dag:
     today_date = datetime.now().strftime("%Y/%m/%d")
     # Define the start task
@@ -52,7 +52,7 @@ with DAG(
     extract_task = DockerOperator(
         task_id=extract_task_id,
         dag=dag,
-        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        image="tagny/quechoisir-internet-box-plans-etl:latest",
         container_name=f"airflow-task-{extract_task_id}",
         auto_remove="force",
         env_file=ENV_FILE,
@@ -66,7 +66,7 @@ with DAG(
     transform_task = DockerOperator(
         task_id=transform_task_id,
         dag=dag,
-        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        image="tagny/quechoisir-internet-box-plans-etl:latest",
         container_name=f"airflow-task-{transform_task_id}",
         auto_remove="force",
         env_file=ENV_FILE,
@@ -80,7 +80,7 @@ with DAG(
     load_task = DockerOperator(
         task_id=load_task_id,
         dag=dag,
-        image="tagny/quechoisir-mobile-phone-plans-etl:latest",
+        image="tagny/quechoisir-internet-box-plans-etl:latest",
         container_name=f"airflow-task-{load_task_id}",
         auto_remove="force",
         env_file=ENV_FILE,
