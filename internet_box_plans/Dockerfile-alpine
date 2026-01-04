@@ -1,0 +1,49 @@
+# Use uv's official Python image as base
+FROM ghcr.io/astral-sh/uv:0.9.20-python3.13-alpine
+
+# set labels
+LABEL org.opencontainers.image.description="A scraper ETL pipeline for French internet box plans."
+LABEL org.opencontainers.image.licenses="tagny"
+LABEL org.opencontainers.image.source="https://github.com/tagny/quechoisir-comparator-scrapers/internet_box_plans/Dockerfile-alpine"
+LABEL org.opencontainers.image.title="quechoisir-internet-box-plans-etl"
+LABEL org.opencontainers.image.url="http://hub.docker.com/r/tagny/quechoisir-internet-box-plans-etl"
+LABEL org.opencontainers.image.version="0.1.0"
+LABEL org.opencontainers.image.vendor="tagny"
+LABEL org.opencontainers.image.authors="tagny https://github.com/tagny"
+
+# install the chrome web driver
+RUN apk update && \
+    apk add --no-cache gcompat glib nss libxcb libgcc chromium && \
+    apk cache clean
+
+# Set working directory
+WORKDIR /app
+
+# Copy application code
+COPY etl ./etl
+
+# Copy pyproject.toml and README.md for dependency resolution
+COPY pyproject.toml README.md ./
+
+# Copy configuration files
+COPY config ./config
+
+# create app user
+RUN adduser -D app
+RUN chown app:app /app
+USER app
+
+# Install project dependencies (including dev deps)
+RUN uv sync && uv cache clean
+
+# Set default environment variables
+ENV PROJECT_ID=""
+ENV DATASET=""
+ENV BUCKET_NAME=""
+ENV BASE_URL=https://www.quechoisir.org/comparateur-fai-n21205/
+ENV RAW_BASE_DIR=.data/raw/
+ENV TRANSFORMED_BASE_DIR=.data/transformed/
+
+# Run the server with customizable args from env vars
+ENTRYPOINT ["sh", "-c"]
+CMD ["uv run -m etl"]

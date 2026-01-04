@@ -54,13 +54,11 @@ with DAG(
         dag=dag,
         image="tagny/quechoisir-mobile-phone-plans-etl:latest",
         container_name=f"airflow-task-{extract_task_id}",
-        auto_remove="never",
+        auto_remove="force",
         env_file=ENV_FILE,
         # --- Mounts Configuration ---
         mounts=[sa_key_mount],
         command=[
-            "sh",
-            "-c",
             f"uv run -m etl extract -c {CONFIG_FILE} -k {CONTAINER_SA_KEY_PATH}",
         ],
     )
@@ -70,13 +68,11 @@ with DAG(
         dag=dag,
         image="tagny/quechoisir-mobile-phone-plans-etl:latest",
         container_name=f"airflow-task-{transform_task_id}",
-        auto_remove="never",
+        auto_remove="force",
         env_file=ENV_FILE,
         # --- Mounts Configuration ---
         mounts=[sa_key_mount],
         command=[
-            "sh",
-            "-c",
             f"uv run -m etl transform -d {today_date} -k {CONTAINER_SA_KEY_PATH}",
         ],
     )
@@ -86,13 +82,11 @@ with DAG(
         dag=dag,
         image="tagny/quechoisir-mobile-phone-plans-etl:latest",
         container_name=f"airflow-task-{load_task_id}",
-        auto_remove="never",
+        auto_remove="force",
         env_file=ENV_FILE,
         # --- Mounts Configuration ---
         mounts=[sa_key_mount],
         command=[
-            "sh",
-            "-c",
             f"uv run -m etl load -d {today_date} -k {CONTAINER_SA_KEY_PATH}",
         ],
     )

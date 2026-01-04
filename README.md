@@ -34,6 +34,7 @@ quechoisir-comparator-scrapers/
 ├── .data/                                                # Default data directory
 ├── .logs/                                                # Default logs directory
 ├── airflow_dags/                                         # Airflow dags directory
+├── internet_box_plans/                                   # Internet box plans scraper source code directory
 ├── mobile_phone_plans/                                   # Mobile phone plans scraper source code directory
 ├── scripts/                                              # Automation scripts directory
 ├── tests/                                                # Tests directory (TODO: to be implemented)

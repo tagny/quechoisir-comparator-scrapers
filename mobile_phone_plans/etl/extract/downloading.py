@@ -1,4 +1,4 @@
-"""This module scrap offers from the comparator energie-info.fr by running different
+"""This module scrap offers from the comparator mobile phone plans by running different
 scenarios i.e. prospect profiles"""
 
 import time

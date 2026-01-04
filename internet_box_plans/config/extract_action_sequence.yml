@@ -1,0 +1,22 @@
+button_cookies_action: &button_cookies_action
+  label: "Continuer sans accepter"
+  tag: button
+  type: "button"
+  value: null
+  value_text: "Continuer sans accepter"
+  locator_name: "id"
+  locator_value: "popin_tc_privacy_button"
+  delay: 1
+
+button_close_newsletter_dialog_action: &button_close_newsletter_dialog_action
+  label: "Recevez gratuitement la newsletter"
+  tag: button
+  type: "button"
+  value: null
+  value_text: "Fermer"
+  locator_name: "xpath"
+  locator_value: "//button[@class='qc-banner-sticky_close qc-bg-color-neutral-100' and @aria-controls='qc-banner-sticky' and @aria-label='Fermer']"
+  delay: 1
+action_sequence:
+  - *button_cookies_action
+  - *button_close_newsletter_dialog_action
