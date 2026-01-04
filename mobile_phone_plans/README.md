@@ -61,19 +61,21 @@ uv run -m etl load -d 2025/12/08 -k ../.data/credentials/service_account_key.jso
 ## Docker
 
 ```bash
-export IMAGE_VERSION=$(python -c "from etl.__version__ import __version__; print(__version__)")
+export IMAGE_VERSION=$(python3 -c "from etl.__version__ import __version__; print(__version__)")
 
 # Build the Docker image
-docker build \
-  --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
-  -t tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION .
+docker build -t tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION-alpine -t tagny/quechoisir-mobile-phone-plans-etl:latest -f Dockerfile-alpine .
+docker build -t tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION-bookworm -f Dockerfile-bookworm .
 
-docker tag tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION tagny/quechoisir-mobile-phone-plans-etl:latest
+# Push the Docker image to Docker Hub
+docker push tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION-alpine
+docker push tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION-bookworm
+docker push tagny/quechoisir-mobile-phone-plans-etl:latest
+
 
 # Run the Docker container and open a shell
-# docker run -ti tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION sh
-docker run -ti --env-file .env --mount type=bind,src=/tmp/service_account_key.json,dst=/tmp/service_account_key.json,readonly tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION sh
+docker run -ti --env-file .env --mount type=bind,src=/tmp/service_account_key.json,dst=/tmp/service_account_key.json,readonly tagny/quechoisir-mobile-phone-plans-etl sh
 
 # Run the ETL pipeline without cloud logging
-docker run --env-file .env tagny/quechoisir-mobile-phone-plans-etl:$IMAGE_VERSION --mount type=bind,src=/tmp/service_account_key.json,dst=/tmp/service_account_key.json,readonly sh -c "uv run -m etl extract -c config/extract_action_sequence.yml -k /tmp/service_account_key.json"
+docker run --env-file .env tagny/quechoisir-mobile-phone-plans-etl sh -c "uv run -m etl extract -c config/extract_action_sequence.yml -k /tmp/service_account_key.json"
 ```

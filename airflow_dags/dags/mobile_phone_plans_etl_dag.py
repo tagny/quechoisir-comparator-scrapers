@@ -22,9 +22,11 @@ sa_key_mount = Mount(
     read_only=True,  # Recommended for config files/secrets
 )
 
+DAG_NAME = "quechoisir_mobile_phone_plans_etl"
+
 # DAG configuration
 with DAG(
-    dag_id="quechoisir_mobile_phone_plans_etl",
+    dag_id=DAG_NAME,
     start_date=pendulum.datetime(2023, 1, 1, tz="UTC"),
     schedule=None,
     catchup=False,
@@ -43,9 +45,9 @@ with DAG(
 
     end_task = BashOperator(task_id="4_end_pipeline", bash_command="echo 'Ending ETL!'")
 
-    extract_task_id = "1_extract"
-    transform_task_id = "2_transform"
-    load_task_id = "3_load"
+    extract_task_id = f"1_extract_{DAG_NAME}"
+    transform_task_id = f"2_transform_{DAG_NAME}"
+    load_task_id = f"3_load_{DAG_NAME}"
 
     extract_task = DockerOperator(
         task_id=extract_task_id,

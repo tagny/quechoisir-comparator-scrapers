@@ -95,7 +95,7 @@ fi
 
 # docker prune
 log "Pruning docker..."
-docker system prune -f
+docker ps -a --filter "name=quechoisir" --format "{{.ID}}" | xargs -r docker rm -f
 
 # --- Environment Setup ---
 log "Starting Airflow DAG $DAG_ID execution script."

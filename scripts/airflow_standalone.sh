@@ -1,7 +1,7 @@
 # !/bin/bash
 # Script to run Airflow DAGs for the project
-# Usage: bash -x ./scripts/start_airflow.sh <AIRFLOW_DAGS_DIR> <SERVICE_ACCOUNT_KEY_PATH>
-# Example: bash ./scripts/start_airflow.sh /home/tagny/github/quechoisir-comparator-scrapers/airflow_dags/dags .data/credentials/service_account_key.json
+# Usage: bash -x ./scripts/airflow_standalone.sh <AIRFLOW_DAGS_DIR> <SERVICE_ACCOUNT_KEY_PATH>
+# Example: bash ./scripts/airflow_standalone.sh airflow_dags/dags .data/credentials/service_account_key.json
 docker system prune -f
 
 source airflow_dags/.venv/bin/activate
@@ -50,13 +50,15 @@ log "Copying dags to $AIRFLOW_HOME/dags..."
 export AIRFLOW__CORE__DAGS_FOLDER="$AIRFLOW_DAGS_DIR"
 # cp -r "$AIRFLOW_DAGS_DIR" "$AIRFLOW_HOME/dags"
 export AIRFLOW__CORE__LOAD_EXAMPLES=False
-export AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG=1
+export AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG=16
 export AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=1
+export AIRFLOW__API__PORT=8081
 log "AIRFLOW_HOME: $AIRFLOW_HOME"
 log "AIRFLOW__CORE__DAGS_FOLDER: $AIRFLOW__CORE__DAGS_FOLDER"
 log "AIRFLOW__CORE__LOAD_EXAMPLES: $AIRFLOW__CORE__LOAD_EXAMPLES"
 log "AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG: $AIRFLOW__CORE__MAX_ACTIVE_TASKS_PER_DAG"
 log "AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: $AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG"
+log "AIRFLOW__API__PORT: $AIRFLOW__API__PORT"
 log "Migrating database..."
 airflow db migrate
 log "Starting Airflow in standalone mode..."
