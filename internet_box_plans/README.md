@@ -13,17 +13,31 @@ internet_box_plans/
 ├── .logs/                               # logs directory
 ├── config                               # config package
 │   └── extract_action_sequence.yml      # action sequence config file
-└── etl                                  # etl package
-    ├── __init__.py                      # etl package initialization script
-    ├── __main__.py                      # etl package main script
-    ├── __version__.py                   # etl package version script
-    ├── logging_setup.py                 # etl package logging setup script
-    ├── data                             # etl package data directory
-    │   └── raw_data_loading.py          # etl package data raw data loading script
-    └── extract                          # etl package extract module
-        ├── __init__.py                  # etl package extract module initialization script
-        ├── downloading.py               # etl package extract module downloading script
-        └── selenium_setup.py            # etl package extract module selenium setup script
+├── etl                                  # etl package
+│    ├── __init__.py                     # etl package initialization script
+│    ├── __main__.py                     # etl package main script
+│    ├── __version__.py                  # etl package version script
+│    ├── logging_setup.py                # etl package logging setup script
+│    ├── data                            # etl package data directory
+│    │   └── raw_data_loading.py         # etl package data raw data loading script
+│    ├── extract                         # etl package extract module
+│    │   ├── __init__.py                 # etl package extract module initialization script
+│    │   ├── downloading.py              # etl package extract module downloading script
+│    │   └── selenium_setup.py           # etl package extract module selenium setup script
+│    ├── transform                       # etl package transform module 
+│    │   ├── __init__.py                 # etl package transform module initialization script
+│    │   └── transform.py                # etl package transform module transform script
+│    └── load                            # etl package load module
+│        ├── __init__.py                 # etl package load module initialization script
+│        └── load.py                     # etl package load module load script
+├── .bumpversion.toml                    # bumpversion configuration file
+├── .dockerignore                        # docker ignore file
+├── .env.example                         # example of environment variables file
+├── Dockerfile-alpine                    # dockerfile for alpine linux - recommended as it is the smallest image
+├── Dockerfile-bookworm                  # dockerfile for bookworm
+├── pyproject.toml                       # project configuration file
+├── README.md                            # this README file
+└── uv.lock                              # uv lock file
 ```
 
 ## Installation
@@ -32,15 +46,33 @@ internet_box_plans/
 uv sync
 ```
 
+## Configuration
+
+### Extract action sequence
+
+The extract action sequence is a YAML file that contains the configuration for the ETL pipeline. It is located at `config/extract_action_sequence.yml`.
+
+### Environment variables
+
+The environment variables are stored in a `.env` file. An example is provided in `.env.example`.
+
+### Service account key
+
+The service account key is a JSON file that contains the credentials for the Google Cloud service account. It is used to authenticate the ETL pipeline when it is run in a Docker container. 
+
+The service account key is mounted in the Docker container at `/tmp/service_account_key.json`.
+
 ## Usage
 
 ```bash
 uv run -m etl extract -c <config_file> -k <service_account_key_json_path>
-uv run -m etl transform -s <scraping_date> -k <service_account_key_json_path>
+uv run -m etl transform -d <scraping_date> -k <service_account_key_json_path>
+uv run -m etl load -d <scraping_date> -k <service_account_key_json_path>
 ```
 
 where:
   - <config_file> is the path to the config file (e.g. "config/extract_action_sequence.yml")
+  - <scraping_date> is the date of the scraping (e.g. "2026/01/04")
   - <service_account_key_json_path> is the path to the service account key JSON file (e.g. "./.data/credentials/service_account_key.json")
 
 Example:
