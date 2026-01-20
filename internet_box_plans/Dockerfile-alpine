@@ -28,6 +28,9 @@ COPY pyproject.toml README.md ./
 # Copy configuration files
 COPY config ./config
 
+# Copy aiflow dags to ease deployment on cloud VM instances
+COPY airflow_dags/internet_box_plans_etl_dag.py ./airflow_dags/
+
 # create app user
 RUN adduser -D app
 RUN chown app:app /app
