@@ -48,6 +48,6 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           tags:
-            - ${{ matrix.image }}:pr-${{ github.event.number }}-alpine
             - ${{ matrix.image }}:latest
+            - ${{ matrix.image }}:pr-${{ github.event.number }}-alpine
           push: true
