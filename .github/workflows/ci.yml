@@ -1,5 +1,5 @@
 # Continuous Integration workflow.
-name: Pre-commit Checks
+name: Static Code Analysis
 
 on:
   # Trigger the workflow on pull request events
