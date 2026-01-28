@@ -1,4 +1,4 @@
-name: CD - Build Alpine Docker Images
+name: CD - Build Docker Images And Deploy On Google Cloud
 
 on:
   pull_request:
