@@ -1,5 +1,5 @@
 # Continuous Integration workflow.
-name: Static Code Analysis
+name: CI - Static Code Analysis
 
 on:
   # Trigger the workflow on pull request events
