@@ -1,4 +1,4 @@
-name: CD - Build Alpine Docker Images
+name: CD - Build Docker Images And Deploy On Google Cloud
 
 on:
   pull_request:
@@ -10,9 +10,10 @@ on:
       - 'VERSION'
       - '.bumpversion.toml'
       - '.github/workflows/cd-delivery.yml'
+      - 'infrastructure/**'
 
 jobs:
-  build-alpine-images:
+  job-build-alpine-images:
     name: Build Alpine Docker images
     runs-on: ubuntu-latest
 
@@ -22,11 +23,11 @@ jobs:
           - name: mobile_phone_plans
             context: mobile_phone_plans
             dockerfile: mobile_phone_plans/Dockerfile-alpine
-            image: tagny/quechoisir-mobile-phone-plans-etl
+            image: quechoisir-mobile-phone-plans-etl
           - name: internet_box_plans
             context: internet_box_plans
             dockerfile: internet_box_plans/Dockerfile-alpine
-            image: tagny/quechoisir-internet-box-plans-etl
+            image: quechoisir-internet-box-plans-etl
 
     steps:
       - name: Checkout repository
@@ -48,6 +49,37 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           tags: |
-            ${{ matrix.image }}:latest
-            ${{ matrix.image }}:pr-${{ github.event.number }}-alpine
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:pr-${{ github.event.number }}-alpine
           push: true
+
+  job-terraform-apply-gcp-instance:
+    name: Apply Terraform for GCP instance
+    runs-on: ubuntu-latest
+    needs: job-build-alpine-images
+
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Apply Terraform in infrastructure/gcp_instance
+        working-directory: infrastructure/gcp_instance
+        run: |
+          terraform init -input=false
+          terraform apply -auto-approve -input=false -var "project_id=${GCP_PROJECT_ID}"

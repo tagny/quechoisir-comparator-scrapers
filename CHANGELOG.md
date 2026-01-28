@@ -1,4 +1,15 @@
 
+## 0.7.0
+
+- Add Terraform infrastructure and GitHub Actions workflows to provision a GCP instance and build images with Terraform.
+- Update CI workflows and gitignore to support Terraform files and syntax analysis.
+
+## 0.6.0
+
+- Add Airflow DAG for the internet box plans ETL pipeline with configuration files for orchestration.
+- Improve internet box plans ETL code readability and enable logging in data utilities.
+- Update CD workflows to build and push Docker images to docker.io.
+
 ## 0.5.0
 
 - Add internet box plans ETL pipeline with Dockerfile.

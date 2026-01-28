@@ -1,6 +1,7 @@
 # quechoisir-comparator-scrapers
 
-[![Pre-commit Checks](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml/badge.svg)](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml)
+[![CI - Static Code Analysis](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml/badge.svg)](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/ci.yml)
+[![CD - Build Docker Images And Deploy On Google Cloud](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/cd.yml/badge.svg)](https://github.com/tagny/quechoisir-comparator-scrapers/actions/workflows/cd.yml)
 
 Implementing ETL pipelines to daily scrap the free comparators of the website www.quechoisir.org.
 
