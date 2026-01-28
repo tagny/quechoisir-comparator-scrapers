@@ -56,7 +56,7 @@ jobs:
   job-terraform-apply-gcp-instance:
     name: Apply Terraform for GCP instance
     runs-on: ubuntu-latest
-    needs: build-alpine-images
+    needs: job-build-alpine-images
 
     env:
       TF_IN_AUTOMATION: "true"
