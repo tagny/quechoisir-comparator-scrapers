@@ -1,7 +1,7 @@
 variable "project_id" {
   description = "ID of the GCP project to deploy into."
   type        = string
-  default     = "ribal-contact-478509-c3"
+  default     = "tribal-contact-478509-c3"
 }
 
 variable "region" {
