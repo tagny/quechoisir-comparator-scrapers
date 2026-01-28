@@ -10,6 +10,7 @@ on:
       - 'VERSION'
       - '.bumpversion.toml'
       - '.github/workflows/cd-delivery.yml'
+      - 'infrastructure/**'
 
 jobs:
   job-build-alpine-images:
