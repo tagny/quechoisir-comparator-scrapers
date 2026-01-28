@@ -23,11 +23,11 @@ jobs:
           - name: mobile_phone_plans
             context: mobile_phone_plans
             dockerfile: mobile_phone_plans/Dockerfile-alpine
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/quechoisir-mobile-phone-plans-etl
+            image: quechoisir-mobile-phone-plans-etl
           - name: internet_box_plans
             context: internet_box_plans
             dockerfile: internet_box_plans/Dockerfile-alpine
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/quechoisir-internet-box-plans-etl
+            image: quechoisir-internet-box-plans-etl
 
     steps:
       - name: Checkout repository
@@ -49,8 +49,8 @@ jobs:
           context: ${{ matrix.context }}
           file: ${{ matrix.dockerfile }}
           tags: |
-            ${{ matrix.image }}:latest
-            ${{ matrix.image }}:pr-${{ github.event.number }}-alpine
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.image }}:pr-${{ github.event.number }}-alpine
           push: true
 
   job-terraform-apply-gcp-instance:
