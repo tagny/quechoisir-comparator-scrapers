@@ -44,7 +44,7 @@ variable "start_schedule_cron" {
   description = "Cron schedule (in Cloud Scheduler format) for starting the VM."
   type        = string
   # Default: every day at 12:00 (noon)
-  default     = "0 12 * * *"
+  default = "0 12 * * *"
 }
 
 variable "start_schedule_time_zone" {
